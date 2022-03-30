@@ -15,7 +15,6 @@ def login(username, password):
             session["user_name"] = username
             session["user_role"] = user[2]
             session["csrf_token"] = secrets.token_hex(16)
-            print(session["user_ role"])
             return True
         else:
             return False
