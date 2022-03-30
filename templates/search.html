@@ -1,0 +1,16 @@
+<p>
+Etsi ravintolaa
+<form action="/search" method="get">
+<input type="text" name="query">
+<input type="submit" value="Etsi">
+</form>
+<p>
+Ravintolat joissa on {{ search }}:
+<ul>
+{% for restaurant in restaurants %}
+<li><a href="/restaurant/{{ restaurant.id }}">{{ restaurant.name }}</a>
+{% endfor %}
+</ul>
+
+<p>
+<a href="/">Palaa takaisin</a>

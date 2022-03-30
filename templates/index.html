@@ -1,0 +1,28 @@
+{% if session.user_id %}
+Olet kirjautunut sisään nimellä <b>{{ session.user_name }}</b>. <a href="/logout">Kirjaudu ulos</a>
+{% else %}
+Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a>
+{% endif %}
+
+<p>
+Etsi ravintolaa
+<form action="/search" method="get">
+<input type="text" name="query">
+<input type="submit" value="Etsi">
+</form>
+<p>
+Ravintolat:
+<ul>
+{% for restaurant in restaurants %}
+<li><a href="/restaurant/{{ restaurant.id }}">{{ restaurant.name }}</a>
+{% endfor %}
+</ul>
+
+
+{% if session.user_role == 2 %}
+<h4>Ravintoloitsijan toiminnot</h4>
+<ul>
+<li><a href="/add">Perusta uusi ravintola</a>
+<li><a href="/remove">Poista ravintola</a>
+</ul>
+{% endif %}

@@ -1,0 +1,12 @@
+<h2>Poista ravintola</h2>
+<form action="/remove" method="post">
+<p>Minkä ravintolan haluat poistaa?</p>
+{% for restaurant in restaurants %}
+<input type="radio" name="restaurant" value="{{ restaurant.id }}"> {{ restaurant.name }} <br>
+{% endfor %}
+<p>
+<input type="submit" value="Poista">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>
+<p>
+<a href="/">Palaa takaisin</a>

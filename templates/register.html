@@ -1,0 +1,20 @@
+
+
+<h1>Rekisteröinti</h1>
+<form action="/register" method="post">
+Käyttäjätunnus * <br><input type="text" name="username" minlength="5" maxlength="15"> 
+<p>
+Salasana * <br><input type="password" name="password1"> 
+<p>
+Salasana uudestaan *<br><input type="password" name="password2"> 
+<p>
+Käyttäjärooli
+<select name="role">
+    <option value=1> Asiakas
+    <option value=2> Ravintoloitsija
+</select>
+<p>
+<input type="submit" value="Luo tunnus">      
+</form>
+<p>
+<a href="/login">Palaa takaisin</a>

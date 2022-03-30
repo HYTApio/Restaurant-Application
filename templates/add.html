@@ -1,0 +1,15 @@
+<h2>Perusta uusi ravintola</h2>
+<form action="/add" method="post">
+<p>Ravintolan nimi *<br>
+<input type="text" name="name" minlength="1" maxlength="25"></p>
+<p>Ravintolan info<br>
+<input type="text" name="info" minlength="1" maxlength="25"></p>
+<p>Ravintolan aukioloajat<br>
+<input type="text" name="name" maxlength="100"></p>
+<p>Ravintolan osoite<br>
+<input type="text" name="address" maxlength="100"></p>
+<input type="submit" value="Lähetä">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>   
+<p>
+<a href="/">Palaa takaisin</a>
