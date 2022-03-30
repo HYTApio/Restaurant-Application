@@ -11,3 +11,5 @@ Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda soveluk
 * Vierailija voi etsiä ravintoloita nimen perusteella
 * Ravintoloitsija voi luoda ravintolan
 * Ravintoloitsija voi poistaa luomansa ravintolan
+
+[Linkki herokuun](https://morning-eyrie-08874.herokuapp.com/)
