@@ -11,4 +11,3 @@ Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda soveluk
 * Vierailija voi etsiä ravintoloita nimen perusteella
 * Ravintoloitsija voi luoda ravintolan
 * Ravintoloitsija voi poistaa luomansa ravintolan
-* Ravintolat voi sijoittaa kartalle (Tätä tutkin hieman ja vaikuttaisi ihan mahdolliselta)
