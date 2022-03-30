@@ -6,7 +6,8 @@ Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda soveluk
 
 * Käyttäjä voi kirjautua sisään ja luoda uuden tunnuksen
 * Vierailija voi etsiä ravintolaa ravintoloiden listasta
-* Vierailija voi jättää arvostelun ravintolalle ja nähdä muiden arvosteluja
+* Asiakas voi jättää arvostelun ravintolalle
+* Vierailija näkee muiden jättämät arvostelut
 * Vierailija näkee valitsemansa raintolan tiedot
 * Vierailija voi etsiä ravintoloita nimen perusteella
 * Ravintoloitsija voi luoda ravintolan
