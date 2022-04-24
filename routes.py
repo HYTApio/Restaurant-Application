@@ -191,6 +191,12 @@ def add_menu():
         render_template("error.html", message="Rualla pitää olla nimi")
         
     price = request.form["price"]
+
+    try:
+        price = float(price)
+    except:
+        render_template("error.html", message="Hinnan pitää olla numero")
+        
     if len(price) > 1000:
         render_template("error.html", message="Hinnassa saa korkeintaan olla 1000 merkkiä")
 
