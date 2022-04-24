@@ -9,6 +9,7 @@ CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
     creator_id INTEGER REFERENCES users,
     name TEXT,
+    searchname TEXT,
     visible INTEGER
 );
 
@@ -27,3 +28,9 @@ CREATE TABLE reviews (
     stars INTEGER,
     comment TEXT
 );
+
+CREATE TABLE MENU (
+    restaurant_id INTEGER REFERENCES restaurants,
+    foodname TEXT,
+    price INTEGER
+)
