@@ -6,6 +6,23 @@
 <li>Osoite : {{ address }}
 </ul>
 
+{% if session.user_id==creator_id %}
+Muuta tietoja:
+<form action="/update_info" method="post">
+<p>Ravintolan nimi *<br>
+<input type="text" name="name" minlength="1" maxlength="25" value={{ name }}></p>
+<p>Ravintolan info<br>
+<input type="text" name="info" minlength="1" maxlength="25" value={{ info }}></p>
+<p>Ravintolan aukioloajat<br>
+<input type="text" name="name" maxlength="100" value={{ openinghours }}></p>
+<p>Ravintolan osoite<br>
+<input type="text" name="address" maxlength="100" value= {{ address }}></p>
+<input type="submit" value="Päivitä">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<input type="hidden" name="restaurant_id" value="{{ id }}">
+</form>  
+{% endif %}
+
 {% if reviews %}
 <h3>Arviot:</h3>
 {% endif%}

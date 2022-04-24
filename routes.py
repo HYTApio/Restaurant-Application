@@ -48,7 +48,7 @@ def register():
             return render_template("error.html", message="Väärä käyttäjärooli")
 
         if not users.register(username, password1, role):
-            return render_template("error.html", message="Jokin meni vikaan, yritä uudestaan")
+            return render_template("error.html", message="Käyttäjä nimi on jo käytössä")
         
         return redirect("/")
 
@@ -142,4 +142,37 @@ def search():
     query=request.args['query']
     return render_template("search.html", restaurants=restaurants.search_restaurant(query), search=query)
 
+@app.route("/update_info", methods=["post"])
+def update_infoo():
+    users.check_csrf()
+    name = request.form["name"]
+    if len(name) > 25:
+        render_template("error.html", message="Ravintolan nimessä saa korkeintaan olla 25 merkkiä")
+     
+    if len(name) < 1:
+        render_template("error.html", message="Ravintolalla pitää olla nimi")
+        
+    info = request.form["info"]
+    if len(info) > 1000:
+        render_template("error.html", message="Infossa saa korkeintaan olla 1000 merkkiä")
 
+    if info=="":
+        info="-"
+
+    openinghours = request.form["info"]
+    if len(openinghours) > 100:
+        render_template("error.html", message="Aukioloajassa saa korkeintaan olla 1000 merkkiä")
+
+    if openinghours=="":
+        openinghours="ei tietoa"
+        
+    address = request.form["address"]
+    if len(address) > 100:
+        render_template("error.html", message="Osoite saa korkeintaan olla 100 merkkiä")
+        
+    if address=="":
+        "ei tietoa"
+
+    restaurant_id = request.form["restaurant_id"]
+    restaurants.update_restaurant(name, info, openinghours, address, users.user_id(), restaurant_id)
+    return redirect("/restaurant/"+str(restaurant_id))

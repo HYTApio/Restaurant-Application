@@ -15,7 +15,6 @@ def get_restaurant_review(restaurant_id):
 
 def add_review(restaurant_id, user_id, stars, comment):
     sql_code = "SELECT * FROM reviews WHERE restaurant_id=:restaurant_id AND user_id=:user_id"
-    print (db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id}).fetchall())
     if len(db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id}).fetchall()) < 1:
         sql_code = "INSERT INTO reviews (user_id, restaurant_id, stars, comment) VALUES (:user_id, :restaurant_id, :stars, :comment)"
         db.session.execute(sql_code, {"user_id":user_id, "restaurant_id":restaurant_id, "stars":stars, "comment":comment})
@@ -25,9 +24,6 @@ def add_review(restaurant_id, user_id, stars, comment):
         sql_code = "UPDATE reviews SET stars=:stars, comment=:comment WHERE user_id=:user_id AND restaurant_id=:restaurant_id"
         db.session.execute(sql_code, {"user_id":user_id, "restaurant_id":restaurant_id, "stars":stars, "comment":comment})
         db.session.commit()
-
-
-    
 
 def user_restaurants(user_id):
     sql_code = "SELECT id, name FROM restaurants WHERE creator_id=:user_id AND visible=1 ORDER BY name"
@@ -55,3 +51,10 @@ def has_review(restaurant_id, user_id):
     if len(db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id})) > 1:
         return True
      
+def update_restaurant(name, info, openinghours, address, creator_id, restaurant_id):
+    sql_code = "UPDATE restaurants SET name=:name WHERE id=:restaurant_id"
+    db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "restaurant_id":restaurant_id})
+    db.session.commit()
+    sql_code = "UPDATE restaurantinfo SET info=:info, openinghours=:openinghours, address=:address WHERE restaurant_id=:restaurant_id"
+    db.session.execute(sql_code, {"restaurant_id":restaurant_id, "info":info, "openinghours":openinghours, "address":address})
+    db.session.commit()
