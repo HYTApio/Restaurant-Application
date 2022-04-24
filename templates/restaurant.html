@@ -1,3 +1,13 @@
+<head>
+<style>
+* {box-sizing: border-box;}
+.column {float: left; width: 50%; padding: 10px; height:1000px;}
+.row:after {content: ""; display: table; clear: both;}
+</style>
+</head>
+<body>    
+<div class="row">
+<div class="column" style="background-color:#CACA;">
 <h2>{{ name }}</h2>
 <ul>
 <li>Perustaja : {{ creator }}
@@ -12,9 +22,9 @@ Muuta tietoja:
 <p>Ravintolan nimi *<br>
 <input type="text" name="name" minlength="1" maxlength="25" value={{ name }}></p>
 <p>Ravintolan info<br>
-<input type="text" name="info" minlength="1" maxlength="25" value={{ info }}></p>
+<input type="text" name="info" minlength="1" maxlength="1000" value={{ info }}></p>
 <p>Ravintolan aukioloajat<br>
-<input type="text" name="name" maxlength="100" value={{ openinghours }}></p>
+<input type="text" name="openinghours" maxlength="100" value={{ openinghours }}></p>
 <p>Ravintolan osoite<br>
 <input type="text" name="address" maxlength="100" value= {{ address }}></p>
 <input type="submit" value="Päivitä">
@@ -55,3 +65,32 @@ Kommentti:<br>
   
 <p>
 <a href="/">Palaa takaisin</a>
+</div>
+<div class="column" style="background-color:#CACA;">
+
+{% if menu %}
+<h3>Menu:</h3>
+{% endif%}
+
+<ul>
+{% for entry in menu %}
+<li> {{ entry[0] }} ({{ entry[1] }} €)
+{% endfor %}
+</ul>
+
+{% if session.user_id==creator_id %}
+Lisää ruokia menuun:
+<form action="/add_menu" method="post">
+<p>Ruuan nimi *<br>
+<input type="text" name="name" minlength="1" maxlength="25"></p>
+<p>Ruuan hinta (€)*<br>
+<input type="text" name="price" minlength="1" maxlength="1000"></p>
+<input type="submit" value="Lisää">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<input type="hidden" name="restaurant_id" value="{{ id }}">
+</form>  
+{% endif %}
+</div>
+</div>
+ 
+</body>
