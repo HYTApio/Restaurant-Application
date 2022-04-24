@@ -32,5 +32,5 @@ CREATE TABLE reviews (
 CREATE TABLE MENU (
     restaurant_id INTEGER REFERENCES restaurants,
     foodname TEXT,
-    price INTEGER
+    price NUMERIC
 )
