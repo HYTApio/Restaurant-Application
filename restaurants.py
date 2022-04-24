@@ -34,16 +34,16 @@ def remove_restaurant(restaurant_id, user_id):
     db.session.execute(sql_code, {"id":restaurant_id, "user_id":user_id})
     db.session.commit()
 
-def add_restaurant(name, info, openinghours, address, creator_id):
-    sql_code = "INSERT INTO restaurants (creator_id, name, visible) VALUES (:creator_id, :name, 1) RETURNING id"
-    restaurant_id = db.session.execute(sql_code, {"creator_id":creator_id, "name":name}).fetchone()[0]
+def add_restaurant(name, info, openinghours, address, creator_id, searchname):
+    sql_code = "INSERT INTO restaurants (creator_id, name, visible, searchname) VALUES (:creator_id, :name, 1, :searchname) RETURNING id"
+    restaurant_id = db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "searchname":searchname}).fetchone()[0]
     sql_code = "INSERT INTO restaurantinfo (restaurant_id, info, openinghours, address) VALUES (:restaurant_id, :info, :openinghours, :address)"
     db.session.execute(sql_code, {"restaurant_id":restaurant_id, "info":info, "openinghours":openinghours, "address":address})
     db.session.commit()
     return restaurant_id
 
 def search_restaurant(query):
-    sql_code = "SELECT id, name FROM restaurants WHERE name LIKE :query AND visible=1 ORDER BY name"
+    sql_code = "SELECT id, name FROM restaurants WHERE searchname LIKE :query AND visible=1 ORDER BY name"
     return db.session.execute(sql_code, {"query":'%'+query+'%'}).fetchall()
 
 def has_review(restaurant_id, user_id):
@@ -51,10 +51,19 @@ def has_review(restaurant_id, user_id):
     if len(db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id})) > 1:
         return True
      
-def update_restaurant(name, info, openinghours, address, creator_id, restaurant_id):
-    sql_code = "UPDATE restaurants SET name=:name WHERE id=:restaurant_id"
-    db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "restaurant_id":restaurant_id})
+def update_restaurant(name, info, openinghours, address, creator_id, restaurant_id, searchname):
+    sql_code = "UPDATE restaurants SET name=:name, searchname=:searchname WHERE id=:restaurant_id"
+    db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "restaurant_id":restaurant_id, "searchname":searchname})
     db.session.commit()
     sql_code = "UPDATE restaurantinfo SET info=:info, openinghours=:openinghours, address=:address WHERE restaurant_id=:restaurant_id"
     db.session.execute(sql_code, {"restaurant_id":restaurant_id, "info":info, "openinghours":openinghours, "address":address})
     db.session.commit()
+
+def add_menu(name, price, restaurant_id):
+    sql_code = "INSERT INTO menu (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
+    db.session.execute(sql_code, {"name":name, "price":price, "restaurant_id":restaurant_id})
+    db.session.commit()
+
+def get_restaurant_menu(restaurant_id):
+    sql_code = "SELECT foodname, price FROM menu WHERE restaurant_id=:restaurant_id order by foodname"
+    return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchall()   
