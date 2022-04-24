@@ -1,11 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<center>
 <p>
-Etsi ravintolaa
+<h4>Etsi ravintolaa</h4>
 <form action="/search" method="get">
 <input type="text" name="query" value= {{ search }}>
 <input type="submit" value="Etsi">
 </form>
 <p>
-Ravintolat joissa on {{ search }}:
+<h4>Ravintolat joissa on {{ search }}:</h4>
 <ul>
 {% for restaurant in restaurants %}
 <li><a href="/restaurant/{{ restaurant.id }}">{{ restaurant.name }}</a>
@@ -14,3 +17,5 @@ Ravintolat joissa on {{ search }}:
 
 <p>
 <a href="/">Palaa takaisin</a>
+</center>
+{% endblock %}

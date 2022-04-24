@@ -1,5 +1,6 @@
-
-
+{% extends "layout.html" %}
+{% block content %}
+<center>
 <h1>Rekisteröinti</h1>
 <form action="/register" method="post">
 Käyttäjätunnus * <br><input type="text" name="username" minlength="5" maxlength="15"> 
@@ -18,3 +19,5 @@ Käyttäjärooli
 </form>
 <p>
 <a href="/login">Palaa takaisin</a>
+</center>
+{% endblock %}

@@ -1,4 +1,8 @@
+{% extends "layout.html" %}
+{% block content %}
 
+<body>
+<center>
 {% if session.user_id %}
 Olet kirjautunut sisään nimellä <b>{{ session.user_name }}</b>. <a href="/logout">Kirjaudu ulos</a>
 {% else %}
@@ -6,13 +10,13 @@ Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a>
 {% endif %}
 
 <p>
-Etsi ravintolaa
+<h4>Etsi ravintolaa</h4>
 <form action="/search" method="get">
 <input type="text" name="query" value="Ravintolan nimi">
 <input type="submit" value="Etsi">
 </form>
 <p>
-Ravintolat:
+<h4>Ravintolat:</h4>
 <ul>
 {% for restaurant in restaurants %}
 <li><a href="/restaurant/{{ restaurant.id }}">{{ restaurant.name }}</a>
@@ -27,3 +31,7 @@ Ravintolat:
 <li><a href="/remove">Poista ravintola</a>
 </ul>
 {% endif %}
+</center>
+</body>
+
+{% endblock %}

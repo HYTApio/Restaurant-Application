@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+<center>
 <h2>Poista ravintola</h2>
 <form action="/remove" method="post">
 <p>Minkä ravintolan haluat poistaa?</p>
@@ -10,3 +13,5 @@
 </form>
 <p>
 <a href="/">Palaa takaisin</a>
+</center>
+{% endblock %}

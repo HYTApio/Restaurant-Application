@@ -1,5 +1,6 @@
-
-
+{% extends "layout.html" %}
+{% block content %}
+<center>
 <h1>Kirjaudu sisään</h1>
 <form action="/login" method="post">
 Käyttäjätunnus : <br><input type="text" name="username">
@@ -11,3 +12,5 @@ Salasana : <br><input type="password" name="password">
 Jos sinulla ei ole tunnus, voit luoda uuden tunnuksen <a href="/register">tästä</a>
 <p>
 <a href="/">Palaa takaisin</a>
+</center>
+{% endblock %}

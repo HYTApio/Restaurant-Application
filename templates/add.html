@@ -1,4 +1,7 @@
-<h2>Perusta uusi ravintola</h2>
+{% extends "layout.html" %}
+{% block content %}
+<center>
+<h4>Perusta uusi ravintola</h4>
 <form action="/add" method="post">
 <p>Ravintolan nimi *<br>
 <input type="text" name="name" minlength="1" maxlength="25"></p>
@@ -13,3 +16,5 @@
 </form>   
 <p>
 <a href="/">Palaa takaisin</a>
+</center>
+{% endblock %}
