@@ -12,11 +12,14 @@ def index():
 @app.route("/restaurant/<int:restaurant_id>")
 def show_restaurant(restaurant_id):
     info = restaurants.get_restaurant_info(restaurant_id)
-    print(info)
+    if len(info) < 1:
+        return redirect("/")
+
     if info[5]==0:
         return redirect("/")
+
     reviews = restaurants.get_restaurant_review(restaurant_id)
-    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews)
+    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6])
 
 @app.route("/logout")
 def logout():
@@ -76,7 +79,7 @@ def review():
     
     if comment=="":
         comment = "-"
-    
+
     restaurants.add_review(restaurant_id, users.user_id(), stars, comment)
     return redirect("/restaurant/"+str(restaurant_id))
 

@@ -6,7 +6,7 @@ def get_all_restaurants():
     return db.session.execute(sql_code).fetchall()
 
 def get_restaurant_info(restaurant_id):
-    sql_code = "SELECT r.name, u.name, ri.info, ri.openinghours, ri.address, r.visible FROM restaurants r, users u, restaurantinfo ri WHERE r.id=:restaurant_id AND r.id=ri.restaurant_id AND r.creator_id=u.id"
+    sql_code = "SELECT r.name, u.name, ri.info, ri.openinghours, ri.address, r.visible, r.creator_id FROM restaurants r, users u, restaurantinfo ri WHERE r.id=:restaurant_id AND r.id=ri.restaurant_id AND r.creator_id=u.id"
     return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchone()
 
 def get_restaurant_review(restaurant_id):
@@ -14,9 +14,20 @@ def get_restaurant_review(restaurant_id):
     return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchall()
 
 def add_review(restaurant_id, user_id, stars, comment):
-    sql_code = "INSERT INTO reviews (user_id, restaurant_id, stars, comment) VALUES (:user_id, :restaurant_id, :stars, :comment)"
-    db.session.execute(sql_code, {"user_id":user_id, "restaurant_id":restaurant_id, "stars":stars, "comment":comment})
-    db.session.commit()
+    sql_code = "SELECT * FROM reviews WHERE restaurant_id=:restaurant_id AND user_id=:user_id"
+    print (db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id}).fetchall())
+    if len(db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id}).fetchall()) < 1:
+        sql_code = "INSERT INTO reviews (user_id, restaurant_id, stars, comment) VALUES (:user_id, :restaurant_id, :stars, :comment)"
+        db.session.execute(sql_code, {"user_id":user_id, "restaurant_id":restaurant_id, "stars":stars, "comment":comment})
+        db.session.commit()
+    
+    else:
+        sql_code = "UPDATE reviews SET stars=:stars, comment=:comment WHERE user_id=:user_id AND restaurant_id=:restaurant_id"
+        db.session.execute(sql_code, {"user_id":user_id, "restaurant_id":restaurant_id, "stars":stars, "comment":comment})
+        db.session.commit()
+
+
+    
 
 def user_restaurants(user_id):
     sql_code = "SELECT id, name FROM restaurants WHERE creator_id=:user_id AND visible=1 ORDER BY name"
@@ -38,3 +49,9 @@ def add_restaurant(name, info, openinghours, address, creator_id):
 def search_restaurant(query):
     sql_code = "SELECT id, name FROM restaurants WHERE name LIKE :query AND visible=1 ORDER BY name"
     return db.session.execute(sql_code, {"query":'%'+query+'%'}).fetchall()
+
+def has_review(restaurant_id, user_id):
+    sql_code = "SELECT * FROM reviews WHERE restaurant_id=:restaurant_id AND user_id=:user_id"
+    if len(db.session.execute(sql_code, {"restaurant_id":restaurant_id, "user_id":user_id})) > 1:
+        return True
+     

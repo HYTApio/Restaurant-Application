@@ -16,7 +16,7 @@
 {% endfor %}
 </ul>
  
-{% if session.user_id %}
+{% if session.user_id and session.user_id!=creator_id%}
 <h3>Arvioi pakka</h3>
 <form action="/review" method="post">
 Tähdet:
