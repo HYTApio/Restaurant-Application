@@ -148,30 +148,30 @@ def update_info():
     users.check_csrf()
     name = request.form["name"]
     if len(name) > 25:
-        render_template("error.html", message="Ravintolan nimessä saa korkeintaan olla 25 merkkiä")
+        return render_template("error.html", message="Ravintolan nimessä saa korkeintaan olla 25 merkkiä")
      
     if len(name) < 1:
-        render_template("error.html", message="Ravintolalla pitää olla nimi")
+        return render_template("error.html", message="Ravintolalla pitää olla nimi")
     
     searchname = name.lower()
 
     info = request.form["info"]
     if len(info) > 1000:
-        render_template("error.html", message="Infossa saa korkeintaan olla 1000 merkkiä")
+        return render_template("error.html", message="Infossa saa korkeintaan olla 1000 merkkiä")
 
     if info=="":
         info="-"
 
     openinghours = request.form["openinghours"]
     if len(openinghours) > 100:
-        render_template("error.html", message="Aukioloajassa saa korkeintaan olla 1000 merkkiä")
+        return render_template("error.html", message="Aukioloajassa saa korkeintaan olla 1000 merkkiä")
 
     if openinghours=="":
         openinghours="ei tietoa"
         
     address = request.form["address"]
     if len(address) > 100:
-        render_template("error.html", message="Osoite saa korkeintaan olla 100 merkkiä")
+        return render_template("error.html", message="Osoite saa korkeintaan olla 100 merkkiä")
         
     if address=="":
         "ei tietoa"
@@ -185,23 +185,20 @@ def add_menu():
     users.check_csrf()
     name = request.form["name"]
     if len(name) > 25:
-        render_template("error.html", message="Ruuan nimessä saa korkeintaan olla 25 merkkiä")
+        return render_template("error.html", message="Ruuan nimessä saa korkeintaan olla 25 merkkiä")
      
     if len(name) < 1:
-        render_template("error.html", message="Rualla pitää olla nimi")
+        return render_template("error.html", message="Ruualla pitää olla nimi")
         
     price = request.form["price"]
-
-    try:
-        price = float(price)
-    except:
-        render_template("error.html", message="Hinnan pitää olla numero")
-        
-    if len(price) > 1000:
-        render_template("error.html", message="Hinnassa saa korkeintaan olla 1000 merkkiä")
-
-    if len(price) < 1:
-        render_template("error.html", message="Rualla pitää olla hinta")
+    if price:
+        try:
+            if float(price) < 0:
+                return render_template("error.html", message="Hinnan pitää olla positiivinen numero")
+        except:
+            return render_template("error.html", message="Hinnan pitää olla positiivinen numero")
+    else:
+        return render_template("error.html", message="Ruualla pitää olla hinta")
 
     restaurant_id = request.form["restaurant_id"]
     restaurants.add_menu(name, price, restaurant_id)
