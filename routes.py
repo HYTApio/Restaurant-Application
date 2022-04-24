@@ -1,6 +1,3 @@
-from crypt import methods
-from distutils.command import install_egg_info
-from email import message
 from app import app
 from flask import render_template, request, redirect
 import users, restaurants
@@ -12,14 +9,15 @@ def index():
 @app.route("/restaurant/<int:restaurant_id>")
 def show_restaurant(restaurant_id):
     info = restaurants.get_restaurant_info(restaurant_id)
-    if len(info) < 1:
+    if not info:
         return redirect("/")
 
     if info[5]==0:
         return redirect("/")
 
     reviews = restaurants.get_restaurant_review(restaurant_id)
-    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6])
+    menu = restaurants.get_restaurant_menu(restaurant_id)
+    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6], menu=menu)
 
 @app.route("/logout")
 def logout():
@@ -113,6 +111,8 @@ def add_restaurant():
         if len(name) < 1:
             return render_template("error.html", message="Ravintolalla pitää olla nimi")
         
+        searchname=name.lower()
+
         info = request.form["info"]
         if len(info) > 1000:
             return render_template("error.html", message="Infossa saa korkeintaan olla 1000 merkkiä")
@@ -120,7 +120,7 @@ def add_restaurant():
         if info=="":
             info="-"
 
-        openinghours = request.form["info"]
+        openinghours = request.form["openinghours"]
         if len(openinghours) > 100:
             return render_template("error.html", message="Aukioloajassa saa korkeintaan olla 1000 merkkiä")
 
@@ -134,16 +134,17 @@ def add_restaurant():
         if address=="":
             "ei tietoa"
         
-        restaurant_id = restaurants.add_restaurant(name, info, openinghours, address, users.user_id())
+        restaurant_id = restaurants.add_restaurant(name, info, openinghours, address, users.user_id(), searchname)
         return redirect("/restaurant/"+str(restaurant_id))
     
 @app.route("/search", methods=["get"])
 def search():
-    query=request.args['query']
-    return render_template("search.html", restaurants=restaurants.search_restaurant(query), search=query)
+    query = request.args['query']
+    query_help = query.lower()
+    return render_template("search.html", restaurants=restaurants.search_restaurant(query_help), search=query)
 
 @app.route("/update_info", methods=["post"])
-def update_infoo():
+def update_info():
     users.check_csrf()
     name = request.form["name"]
     if len(name) > 25:
@@ -151,7 +152,9 @@ def update_infoo():
      
     if len(name) < 1:
         render_template("error.html", message="Ravintolalla pitää olla nimi")
-        
+    
+    searchname = name.lower()
+
     info = request.form["info"]
     if len(info) > 1000:
         render_template("error.html", message="Infossa saa korkeintaan olla 1000 merkkiä")
@@ -159,7 +162,7 @@ def update_infoo():
     if info=="":
         info="-"
 
-    openinghours = request.form["info"]
+    openinghours = request.form["openinghours"]
     if len(openinghours) > 100:
         render_template("error.html", message="Aukioloajassa saa korkeintaan olla 1000 merkkiä")
 
@@ -174,5 +177,26 @@ def update_infoo():
         "ei tietoa"
 
     restaurant_id = request.form["restaurant_id"]
-    restaurants.update_restaurant(name, info, openinghours, address, users.user_id(), restaurant_id)
+    restaurants.update_restaurant(name, info, openinghours, address, users.user_id(), restaurant_id, searchname)
+    return redirect("/restaurant/"+str(restaurant_id))
+
+@app.route("/add_menu", methods=["post"])
+def add_menu():
+    users.check_csrf()
+    name = request.form["name"]
+    if len(name) > 25:
+        render_template("error.html", message="Ruuan nimessä saa korkeintaan olla 25 merkkiä")
+     
+    if len(name) < 1:
+        render_template("error.html", message="Rualla pitää olla nimi")
+        
+    price = request.form["price"]
+    if len(price) > 1000:
+        render_template("error.html", message="Hinnassa saa korkeintaan olla 1000 merkkiä")
+
+    if len(price) < 1:
+        render_template("error.html", message="Rualla pitää olla hinta")
+
+    restaurant_id = request.form["restaurant_id"]
+    restaurants.add_menu(name, price, restaurant_id)
     return redirect("/restaurant/"+str(restaurant_id))
