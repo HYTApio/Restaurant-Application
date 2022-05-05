@@ -1,4 +1,3 @@
-from cmath import inf
 from db import db
 
 def get_all_restaurants():
@@ -6,7 +5,7 @@ def get_all_restaurants():
     return db.session.execute(sql_code).fetchall()
 
 def get_restaurant_info(restaurant_id):
-    sql_code = "SELECT r.name, u.name, ri.info, ri.openinghours, ri.address, r.visible, r.creator_id FROM restaurants r, users u, restaurantinfo ri WHERE r.id=:restaurant_id AND r.id=ri.restaurant_id AND r.creator_id=u.id"
+    sql_code = "SELECT r.name, u.name, r.info, r.openinghours, r.address, r.visible, r.creator_id FROM restaurants r, users u WHERE r.id=:restaurant_id AND r.creator_id=u.id"
     return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchone()
 
 def get_restaurant_review(restaurant_id):
@@ -35,10 +34,9 @@ def remove_restaurant(restaurant_id, user_id):
     db.session.commit()
 
 def add_restaurant(name, info, openinghours, address, creator_id, searchname):
-    sql_code = "INSERT INTO restaurants (creator_id, name, visible, searchname) VALUES (:creator_id, :name, 1, :searchname) RETURNING id"
-    restaurant_id = db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "searchname":searchname}).fetchone()[0]
-    sql_code = "INSERT INTO restaurantinfo (restaurant_id, info, openinghours, address) VALUES (:restaurant_id, :info, :openinghours, :address)"
-    db.session.execute(sql_code, {"restaurant_id":restaurant_id, "info":info, "openinghours":openinghours, "address":address})
+    sql_code = "INSERT INTO restaurants (creator_id, name, visible, searchname, info, openinghours, address) VALUES (:creator_id, :name, 1, :searchname, :info, :openinghours, :address) RETURNING id"
+    restaurant_id = db.session.execute(sql_code, {
+    "creator_id":creator_id, "name":name, "searchname":searchname, "info":info, "openinghours":openinghours, "address":address}).fetchone()[0]
     db.session.commit()
     return restaurant_id
 
@@ -52,18 +50,24 @@ def has_review(restaurant_id, user_id):
         return True
      
 def update_restaurant(name, info, openinghours, address, creator_id, restaurant_id, searchname):
-    sql_code = "UPDATE restaurants SET name=:name, searchname=:searchname WHERE id=:restaurant_id"
-    db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "restaurant_id":restaurant_id, "searchname":searchname})
-    db.session.commit()
-    sql_code = "UPDATE restaurantinfo SET info=:info, openinghours=:openinghours, address=:address WHERE restaurant_id=:restaurant_id"
-    db.session.execute(sql_code, {"restaurant_id":restaurant_id, "info":info, "openinghours":openinghours, "address":address})
+    sql_code = "UPDATE restaurants SET name=:name, searchname=:searchname, info=:info, openinghours=:openinghours, address=:address WHERE id=:restaurant_id"
+    db.session.execute(sql_code, {"creator_id":creator_id, "name":name, "restaurant_id":restaurant_id, "searchname":searchname, "info":info, "openinghours":openinghours, "address":address})
     db.session.commit()
 
-def add_menu(name, price, restaurant_id):
-    sql_code = "INSERT INTO menu (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
+def add_alacartefood(name, price, restaurant_id):
+    sql_code = "INSERT INTO alacartefood (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
     db.session.execute(sql_code, {"name":name, "price":price, "restaurant_id":restaurant_id})
     db.session.commit()
 
-def get_restaurant_menu(restaurant_id):
-    sql_code = "SELECT foodname, price FROM menu WHERE restaurant_id=:restaurant_id order by foodname"
-    return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchall()   
+def get_alacartefood(restaurant_id):
+    sql_code = "SELECT foodname, price FROM alacartefood WHERE restaurant_id=:restaurant_id order by foodname"
+    return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchall()
+
+def add_lunchfood(name, price, restaurant_id):
+    sql_code = "INSERT INTO lunchfood (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
+    db.session.execute(sql_code, {"name":name, "price":price, "restaurant_id":restaurant_id})
+    db.session.commit()
+
+def get_lunchfood(restaurant_id):
+    sql_code = "SELECT foodname, price FROM lunchfood WHERE restaurant_id=:restaurant_id order by foodname"
+    return db.session.execute(sql_code, {"restaurant_id":restaurant_id}).fetchall()  

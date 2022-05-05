@@ -10,12 +10,7 @@ CREATE TABLE restaurants (
     creator_id INTEGER REFERENCES users,
     name TEXT,
     searchname TEXT,
-    visible INTEGER
-);
-
-CREATE TABLE restaurantinfo (
-    id SERIAL PRIMARY KEY,
-    restaurant_id INTEGER REFERENCES restaurants,
+    visible INTEGER,
     info TEXT,
     openinghours TEXT,
     address TEXT
@@ -29,7 +24,13 @@ CREATE TABLE reviews (
     comment TEXT
 );
 
-CREATE TABLE MENU (
+CREATE TABLE alacartefood (
+    restaurant_id INTEGER REFERENCES restaurants,
+    foodname TEXT,
+    price NUMERIC
+);
+
+CREATE TABLE lunchfood (
     restaurant_id INTEGER REFERENCES restaurants,
     foodname TEXT,
     price NUMERIC

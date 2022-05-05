@@ -16,7 +16,7 @@ def show_restaurant(restaurant_id):
         return redirect("/")
 
     reviews = restaurants.get_restaurant_review(restaurant_id)
-    menu = restaurants.get_restaurant_menu(restaurant_id)
+    menu = restaurants.get_alacartefood(restaurant_id)
     return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6], menu=menu)
 
 @app.route("/logout")
@@ -180,8 +180,8 @@ def update_info():
     restaurants.update_restaurant(name, info, openinghours, address, users.user_id(), restaurant_id, searchname)
     return redirect("/restaurant/"+str(restaurant_id))
 
-@app.route("/add_menu", methods=["post"])
-def add_menu():
+@app.route("/add_alacartefood", methods=["post"])
+def add_alacartefood():
     users.check_csrf()
     name = request.form["name"]
     if len(name) > 25:
@@ -201,5 +201,29 @@ def add_menu():
         return render_template("error.html", message="Ruualla pitää olla hinta")
 
     restaurant_id = request.form["restaurant_id"]
-    restaurants.add_menu(name, price, restaurant_id)
+    restaurants.add_alacartefood(name, price, restaurant_id)
+    return redirect("/restaurant/"+str(restaurant_id))
+
+@app.route("/add_lunchfood", methods=["post"])
+def add_lunchfood():
+    users.check_csrf()
+    name = request.form["name"]
+    if len(name) > 25:
+        return render_template("error.html", message="Ruuan nimessä saa korkeintaan olla 25 merkkiä")
+     
+    if len(name) < 1:
+        return render_template("error.html", message="Ruualla pitää olla nimi")
+        
+    price = request.form["price"]
+    if price:
+        try:
+            if float(price) < 0:
+                return render_template("error.html", message="Hinnan pitää olla positiivinen numero")
+        except:
+            return render_template("error.html", message="Hinnan pitää olla positiivinen numero")
+    else:
+        return render_template("error.html", message="Ruualla pitää olla hinta")
+
+    restaurant_id = request.form["restaurant_id"]
+    restaurants.add_lunchfood(name, price, restaurant_id)
     return redirect("/restaurant/"+str(restaurant_id))
