@@ -1,7 +1,7 @@
 import secrets
-from db import db
 from flask import session, request, abort
 from werkzeug.security import check_password_hash, generate_password_hash
+from db import db
 
 def login(username, password):
     sql_code = "SELECT id, password, role FROM users WHERE name=:username"
@@ -9,15 +9,16 @@ def login(username, password):
     user = result.fetchone()
     if not user:
         return False
-    else:
-        if check_password_hash(user[1], password):
-            session["user_id"] = user[0]
-            session["user_name"] = username
-            session["user_role"] = user[2]
-            session["csrf_token"] = secrets.token_hex(16)
-            return True
-        else:
-            return False
+
+    if check_password_hash(user[1], password):
+        session["user_id"] = user[0]
+        session["user_name"] = username
+        session["user_role"] = user[2]
+        session["csrf_token"] = secrets.token_hex(16)
+        return True
+
+    return False
+
 
 def logout():
     del session["user_id"]

@@ -1,6 +1,7 @@
-from app import app
 from flask import render_template, request, redirect
-import users, restaurants
+import users
+import restaurants
+from app import app
 
 @app.route("/")
 def index():
@@ -16,8 +17,9 @@ def show_restaurant(restaurant_id):
         return redirect("/")
 
     reviews = restaurants.get_restaurant_review(restaurant_id)
-    menu = restaurants.get_alacartefood(restaurant_id)
-    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6], menu=menu)
+    alacarte = restaurants.get_alacartefood(restaurant_id)
+    lunch = restaurants.get_lunchfood(restaurant_id)
+    return render_template("restaurant.html", id=restaurant_id, name=info[0], creator=info[1], info=info[2], openinghours=info[3], address=info[4], reviews=reviews, creator_id=info[6], alacarte=alacarte, lunch=lunch)
 
 @app.route("/logout")
 def logout():
@@ -132,7 +134,7 @@ def add_restaurant():
             return render_template("error.html", message="Osoite saa korkeintaan olla 100 merkkiä")
         
         if address=="":
-            "ei tietoa"
+            address = "ei tietoa"
         
         restaurant_id = restaurants.add_restaurant(name, info, openinghours, address, users.user_id(), searchname)
         return redirect("/restaurant/"+str(restaurant_id))
