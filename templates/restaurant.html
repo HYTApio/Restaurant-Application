@@ -3,7 +3,7 @@
 <head>
 <style>
 * {box-sizing: border-box;}
-.column {float: left; width: 50%; padding: 10px; height:1000px;}
+.column {float: left; width: 33.33%; padding: 10px; height:1000px;}
 .row:after {content: ""; display: table; clear: both;}
 </style>
 </head>
@@ -22,13 +22,13 @@
 Muuta tietoja:
 <form action="/update_info" method="post">
 <p>Ravintolan nimi *<br>
-<input type="text" name="name" minlength="1" maxlength="25" value={{ name }}></p>
+<input type="text" name="name" minlength="1" maxlength="25" value="{{ name }}"></p>
 <p>Ravintolan info<br>
-<input type="text" name="info" minlength="1" maxlength="1000" value={{ info }}></p>
+<input type="text" name="info" minlength="1" maxlength="1000" value="{{ info }}"></p>
 <p>Ravintolan aukioloajat<br>
-<input type="text" name="openinghours" maxlength="100" value={{ openinghours }}></p>
+<input type="text" name="openinghours" maxlength="100" value="{{ openinghours }}"></p>
 <p>Ravintolan osoite<br>
-<input type="text" name="address" maxlength="100" value= {{ address }}></p>
+<input type="text" name="address" maxlength="100" value= "{{ address }}"></p>
 <input type="submit" value="Päivitä">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="hidden" name="restaurant_id" value="{{ id }}">
@@ -46,7 +46,7 @@ Muuta tietoja:
 </ul>
  
 {% if session.user_id and session.user_id!=creator_id%}
-<h3>Arvioi pakka</h3>
+<h3>Arvioi ravintola</h3>
 <form action="/review" method="post">
 Tähdet:
 <select name="stars">
@@ -75,13 +75,13 @@ Kommentti:<br>
 {% endif%}
 
 <ul>
-{% for entry in menu %}
+{% for entry in alacarte %}
 <li> {{ entry[0] }} ({{ entry[1] }} €)
 {% endfor %}
 </ul>
 
 {% if session.user_id==creator_id %}
-Lisää ruokia menuun:
+Lisää ruokia Alacarte menuun:
 <form action="/add_alacartefood" method="post">
 <p>Ruuan nimi *<br>
 <input type="text" name="name" minlength="1" maxlength="25"></p>
@@ -93,7 +93,34 @@ Lisää ruokia menuun:
 </form>  
 {% endif %}
 </div>
-</div>
  
+<div class="column" style="background-color:#CACA;">
+
+{% if menu %}
+<h3>Lounasmenu:</h3>
+{% endif%}
+  
+<ul>
+{% for entry in lunch %}
+<li> {{ entry[0] }} ({{ entry[1] }} €)
+{% endfor %}
+</ul>
+  
+{% if session.user_id==creator_id %}
+Lisää ruokia Lounas menuun:
+<form action="/add_lunchfood" method="post">
+<p>Ruuan nimi *<br>
+<input type="text" name="name" minlength="1" maxlength="25"></p>
+<p>Ruuan hinta (€)*<br>
+<input type="text" name="price" minlength="1" maxlength="1000"></p>
+<input type="submit" value="Lisää">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<input type="hidden" name="restaurant_id" value="{{ id }}">
+</form>  
+{% endif %}
+</div>
+</div>
+
 </body>
+
 {% endblock %}
