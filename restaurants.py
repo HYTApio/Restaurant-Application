@@ -98,4 +98,3 @@ def update_restaurant(name, info, openinghours, address, creator_id, restaurant_
     db.session.execute(sql_code, {"creator_id": creator_id, "name": name, "restaurant_id": restaurant_id,
                                   "searchname": searchname, "info": info, "openinghours": openinghours, "address": address})
     db.session.commit()
-
