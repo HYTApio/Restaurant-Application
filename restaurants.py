@@ -24,42 +24,6 @@ def get_restaurant_info(restaurant_id):
     return db.session.execute(sql_code, {"restaurant_id": restaurant_id}).fetchone()
 
 
-def get_restaurant_review(restaurant_id):
-    """Etsii tietyn ravintolan arvostelut
-
-    Args:
-        restaurant_id: Etsittävän ravintolan tunnus
-
-    Returns:
-        Arvostelut ravintolasta
-    """
-    sql_code = "SELECT u.name, r.stars, r.comment FROM reviews r, users u WHERE r.user_id=u.id AND r.restaurant_id=:restaurant_id order by r.id"
-    return db.session.execute(sql_code, {"restaurant_id": restaurant_id}).fetchall()
-
-
-def add_review(restaurant_id, user_id, stars, comment):
-    """Lisää arvostelun ravintolalle
-
-    Args:
-        restaurant_id: Etsittävän ravintolan tunnus
-        user_id: Arvioijan tunnus
-        stars: Arvio tähdissä
-        comment: Arvioijan kommentti
-    """
-    sql_code = "SELECT * FROM reviews WHERE restaurant_id=:restaurant_id AND user_id=:user_id"
-    if len(db.session.execute(sql_code, {"restaurant_id": restaurant_id, "user_id": user_id}).fetchall()) < 1:
-        sql_code = "INSERT INTO reviews (user_id, restaurant_id, stars, comment) VALUES (:user_id, :restaurant_id, :stars, :comment)"
-        db.session.execute(sql_code, {
-            "user_id": user_id, "restaurant_id": restaurant_id, "stars": stars, "comment": comment})
-        db.session.commit()
-
-    else:
-        sql_code = "UPDATE reviews SET stars=:stars, comment=:comment WHERE user_id=:user_id AND restaurant_id=:restaurant_id"
-        db.session.execute(sql_code, {
-            "user_id": user_id, "restaurant_id": restaurant_id, "stars": stars, "comment": comment})
-        db.session.commit()
-
-
 def user_restaurants(user_id):
     """Etsii käyttäjän omistamat ravintolat
 
@@ -119,24 +83,6 @@ def search_restaurant(query):
     return db.session.execute(sql_code, {"query": '%'+query+'%'}).fetchall()
 
 
-def has_review(restaurant_id, user_id):
-    """Tarkistaa onko ravintolalla arvoselua jonka käyttäjä on tehnyt
-
-    Args:
-        restaurant_id: Etsittävän ravintolan tunnus
-        user_id: Arvioivan tunnus
-
-    Returns:
-        True jos on
-        False jos ei ole
-    """
-    sql_code = "SELECT * FROM reviews WHERE restaurant_id=:restaurant_id AND user_id=:user_id"
-    if len(db.session.execute(sql_code, {"restaurant_id": restaurant_id, "user_id": user_id})) > 1:
-        return True
-
-    return False
-
-
 def update_restaurant(name, info, openinghours, address, creator_id, restaurant_id, searchname):
     """Päivittää ravintolan tiedot
 
@@ -153,56 +99,3 @@ def update_restaurant(name, info, openinghours, address, creator_id, restaurant_
                                   "searchname": searchname, "info": info, "openinghours": openinghours, "address": address})
     db.session.commit()
 
-
-def add_alacartefood(name, price, restaurant_id):
-    """Lisää alacarte menulle ruuan
-
-    Args:
-        name: Ruuan nimi
-        price: Ruuan hinta
-        restaurant_id: Ravintolan nimi mille lisätään
-    """
-    sql_code = "INSERT INTO alacartefood (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
-    db.session.execute(
-        sql_code, {"name": name, "price": price, "restaurant_id": restaurant_id})
-    db.session.commit()
-
-
-def get_alacartefood(restaurant_id):
-    """Etsii kaikki alacarte ruuat
-
-    Args:
-        restaurant_id: Ravintolan nimi miltä haetaan
-
-    Returns:
-        Lista ruuista
-    """
-    sql_code = "SELECT foodname, price FROM alacartefood WHERE restaurant_id=:restaurant_id order by foodname"
-    return db.session.execute(sql_code, {"restaurant_id": restaurant_id}).fetchall()
-
-
-def add_lunchfood(name, price, restaurant_id):
-    """Lisää lounas menulle ruuan
-
-    Args:
-        name: Ruuan nimi
-        price: Ruuan hinta
-        restaurant_id: Ravintolan nimi mille lisätään
-    """
-    sql_code = "INSERT INTO lunchfood (foodname, price, restaurant_id) VALUES (:name, :price, :restaurant_id)"
-    db.session.execute(
-        sql_code, {"name": name, "price": price, "restaurant_id": restaurant_id})
-    db.session.commit()
-
-
-def get_lunchfood(restaurant_id):
-    """Etsii kaikki lounas ruuat
-
-    Args:
-        restaurant_id: Ravintolan nimi miltä haetaan
-
-    Returns:
-        Lista ruuista
-    """
-    sql_code = "SELECT foodname, price FROM lunchfood WHERE restaurant_id=:restaurant_id order by foodname"
-    return db.session.execute(sql_code, {"restaurant_id": restaurant_id}).fetchall()
