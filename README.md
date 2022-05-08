@@ -1,6 +1,6 @@
 # Restaurant-Application
 
-Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda sovelukseen omalle ravintolalle sivun, jossa kertoo ravintolastaan. 
+Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda sovelukseen omalle ravintolalle sivun, jossa kertoo ravintolastaan ja esittelee ruokia mitä siellä tarjotaan.
 
 ### Sovelluksen ominaisuuksia:
 
@@ -10,10 +10,10 @@ Sovelluksen avulla voi löytää ravintoloita. Ravintoloitsija voi luoda soveluk
 * Vierailija näkee muiden jättämät arvostelut
 * Vierailija näkee valitsemansa ravintolan tiedot
 * Vierailija voi etsiä ravintoloita nimen perusteella (Kirjain koolla ei ole väliä)
-* Vierailija näkee valitsemansa ravintolan menun
+* Vierailija näkee valitsemansa ravintolan alacarte menun ja lounasmenun
 * Ravintoloitsija voi luoda ravintolan
 * Ravintoloitsija voi poistaa luomansa ravintolan
 * Ravintoloitsija pystyy muokkaamaan oman ravintolansa tietoja
-* Ravintoloitsija pystyy lisäämään ravintolalle ruokia
+* Ravintoloitsija pystyy lisäämään ravintolalle lounas ja alacarteruokia
 
 [Linkki herokuun](https://morning-eyrie-08874.herokuapp.com/)
